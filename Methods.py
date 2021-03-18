@@ -3,7 +3,7 @@ import json
 headers = {
     'content-type': "application/json",
     'accept': "application/json",
-    'authorization': "Bearer 2uIcSpFAlNluC5FMiBYU7aMipLdFMg9NCJ-K_0nfPBU"
+    'authorization': "Bearer Nj0ZHCvwlweSSml3Iyydbj3kSD_eK0WiSTixdOh7ng4"
 }
 
 # getting all contacts
@@ -56,7 +56,7 @@ def making_a_payment():
     print("\nMaking a payment to a contact\n")
     payload = {
         'description': 'making_api_payment',
-        'matures_at': '2021-01-21T00:00:00Z',
+        'matures_at': '2021-02-18T00:00:00Z',
         'payouts': [
             {
                 'amount': 300,
@@ -152,30 +152,37 @@ def list_payment_request():
     response = requests.get(url, headers=headers)
     print(response.text)
 
-#get payment request history
+# get payment request history
+
+
 def get_paymentrequest_history():
     url = "https://api.sandbox.split.cash/payment_requests/PR.w20/history"
-    resposne = requests.get(url, headers = headers)
+    resposne = requests.get(url, headers=headers)
     print(resposne.text)
 
-#list incoming payments requests
+# list incoming payments requests
+
+
 def list_incoming_paymentrequest():
     url = "https://api.sandbox.split.cash/payment_requests/incoming"
-    resposne = requests.get(url, headers = headers)
+    resposne = requests.get(url, headers=headers)
     print(resposne.text)
 
-#approve a payment request
+# approve a payment request
+
+
 def approve_paymentrequest():
     url = "https://api.sandbox.split.cash/payment_requests/<paymentrequest_id>/approve"
-    response = requests.post(url, headers = headers)
+    response = requests.post(url, headers=headers)
     print(response.status_code)
 
-#Decline a payment request
+
+""" #Decline a payment request
 def decline_paymentrequest():
-     url = "https://api.sandbox.split.cash/payment_requests/<paymentrequest_id>/decline"
+    url = "https://api.sandbox.split.cash/payment_requests/<paymentrequest_id>/decline"
     response = requests.post(url, headers = headers)
     print(response.status_code)
-    
+     """
 # list all bank connections
 
 
@@ -239,7 +246,61 @@ def activate_closed_open_agreement():
     print(response.status_code)
 
 # close an active open agreements
+
+
 def close_active_agreements():
     url = "https://api.sandbox.split.cash/open_agreements/OA.10v/close"
-    response = requests.post(url, headers = headers)
+    response = requests.post(url, headers=headers)
+    print(response.status_code)
+
+# add a receivable contact(PayID)
+
+
+def receivable_contact():
+    payload = {
+        'name': 'rpayid',
+        'email': 'r@vishakhatesting.com',
+        'payid_email': 'random@vishakhatesting.com'
+    }
+    url = 'https://api.sandbox.split.cash/contacts/receivable'
+    response = requests.post(url, json.dumps(payload), headers=headers)
+    print(response.text)
+
+#
+
+
+def agreement_withKYC():
+    payload = {
+        'authoriser': {
+            'name': 'KYC contact',
+            'email': 'kyc@gmail.com',
+            'bank_account': {
+                'branch_code': '123576',
+                'account_number': '45678901'
+            },
+            'terms': {
+                'per_payout': {
+                    'min_amount': 'null',
+                    'max_amount': 'null'
+                },
+                'per_frequency': {
+                    'days': 'null',
+                    'max_amount': 'null'
+                }
+            }
+        }
+    }
+    url = 'https://api.sandbox.split.cash/agreements/kyc'
+    response = requests.post(url, json.dumps(payload), headers=headers)
+    print(response.text)
+agreement_withKYC()
+
+#simulate_incoming_payid
+def simulate_incoming_payid():
+    payload={
+        'payid_email' : 'random@vishakhatesting.com',
+        'amount': '40'        
+    }
+    url = 'https://api.sandbox.split.cash/simulate/incoming_payid_payment'
+    response = requests.post(url, json.dumps(payload), headers = headers)
     print(response.status_code)
